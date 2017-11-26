@@ -1,0 +1,19 @@
+<resources>
+    <string name="cp_ssid">Copia SSID</string>
+    <string name="cp_pwd">Copia Password</string>
+    <string name="ct_qr">Crea Immagine QR</string>
+    <string name="share">Condividi</string>
+
+    <string name="t_cp_ssid">SSID copiato</string>
+    <string name="t_cp_pwd">Password copiata</string>
+
+    <string name="csoon">Prossimamente...</string>
+
+    <string name="share_msg">Ho copiato questa rete:\n\n%s\n\nGrazie a Wifi View</string>
+    <string name="n_nf">Reti Wifi non trovate</string>
+    <string name="p_nf">Nessuna password trovata</string>
+
+    <string name="about">Info</string>
+    <string name="version">Versione %s</string>
+    <string name="name">Sviluppata da %s</string>
+</resources>

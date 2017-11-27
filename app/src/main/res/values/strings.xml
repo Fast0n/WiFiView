@@ -1,5 +1,5 @@
 <resources>
-    <string translatable="false" name="app_name">Wifi View</string>
+    <string translatable="false" name="app_name">WiFi View</string>
 
     <string name="cp_ssid">Copy SSID</string>
     <string name="cp_pwd">Copy Password</string>

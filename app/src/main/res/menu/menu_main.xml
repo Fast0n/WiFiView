@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.fast0n.wifiview.MainActivity">
 
-
     <item
         android:id="@+id/action_about"
         android:orderInCategory="100"

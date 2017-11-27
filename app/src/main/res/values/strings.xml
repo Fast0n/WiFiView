@@ -1,5 +1,6 @@
 <resources>
     <string translatable="false" name="app_name">WiFi View</string>
+    <string translatable="false" name="folder_name">WiFiViewQR</string>
 
     <string name="cp_ssid">Copy SSID</string>
     <string name="cp_pwd">Copy Password</string>
@@ -12,6 +13,7 @@
     <string name="csoon">Coming soon…</string>
 
     <string name="share_msg">I copied this network:\n\n%s\n\nThanks to Wifi View</string>
+    <string name="share_qr">I created this QR network thanks to Wifi View</string>
     <string name="n_nf">No Wifi networks found</string>
     <string name="p_nf">No password found</string>
 

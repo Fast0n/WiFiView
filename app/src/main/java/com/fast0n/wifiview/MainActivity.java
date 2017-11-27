@@ -5,6 +5,9 @@ import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +33,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -224,7 +228,16 @@ public class MainActivity extends AppCompatActivity {
                                         fOut.close();
 
                                         Runtime.getRuntime()
-                                                .exec(new String[] { "su", "-c", "mkdir sdcard/WifiViewQR" })
+                                                .exec(new String[] { "su", "-c",
+                                                        "mkdir /sdcard/" + getString(R.string.folder_name) })
+                                                .getInputStream();
+
+                                        SystemClock.sleep(1000);
+
+                                        Runtime.getRuntime()
+                                                .exec(new String[] { "su", "-c",
+                                                        "mv /data/data/com.fast0n.wifiview/cache/qr.png /sdcard/"
+                                                                + getString(R.string.folder_name) + "/" + item2 + ".png" })
                                                 .getInputStream();
 
                                     } catch (WriterException e) {
@@ -233,17 +246,26 @@ public class MainActivity extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
 
+
+                                    SystemClock.sleep(3000);
+                                    String bitmapPath = null;
                                     try {
-                                        Runtime.getRuntime().exec(new String[] { "su", "-c",
-                                                "mv /data/data/com.fast0n.wifiview/cache/qr.png sdcard/WifiViewQR/"
-                                                        + item2 + ".png" })
-                                                .getInputStream();
-                                    } catch (IOException e) {
+                                        bitmapPath = MediaStore.Images.Media.insertImage(getContentResolver(),
+                                                "/sdcard/" + getString(R.string.folder_name) + "/" + item2
+                                                        + ".png",
+                                                getString(R.string.share_qr), null);
+
+                                    } catch (FileNotFoundException e) {
                                         e.printStackTrace();
                                     }
+                                    SystemClock.sleep(1000);
+                                    Uri bitmapUri = Uri.parse(bitmapPath);
 
-                                    Toast.makeText(MainActivity.this, getString(R.string.csoon), Toast.LENGTH_LONG)
-                                            .show();
+                                    Intent intent = new Intent(Intent.ACTION_SEND);
+                                    intent.setType("image/png");
+                                    intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_qr));
+                                    intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
+                                    startActivity(Intent.createChooser(intent, getString(R.string.share)));
 
                                 } else if (item == 3) {
                                     String q = (String) lista.getItemAtPosition(position);
@@ -291,7 +313,8 @@ public class MainActivity extends AppCompatActivity {
 
                         String item = (String) lista.getItemAtPosition(position);
                         String[] item1 = item.split("\n");
-                        String item2 = item1[1].replace("Password: ", "");
+
+        String item2 = item1[1].replace("Password: ", "");
 
                         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                         clipboard.setText(item2);
@@ -359,7 +382,16 @@ public class MainActivity extends AppCompatActivity {
                                         fOut.close();
 
                                         Runtime.getRuntime()
-                                                .exec(new String[] { "su", "-c", "mkdir sdcard/WifiViewQR" })
+                                                .exec(new String[] { "su", "-c",
+                                                        "mkdir /sdcard/" + getString(R.string.folder_name) })
+                                                .getInputStream();
+
+                                        SystemClock.sleep(1000);
+
+                                        Runtime.getRuntime()
+                                                .exec(new String[] { "su", "-c",
+                                                        "mv /data/data/com.fast0n.wifiview/cache/qr.png /sdcard/"
+                                                                + getString(R.string.folder_name) + "/" + item2 + ".png" })
                                                 .getInputStream();
 
                                     } catch (WriterException e) {
@@ -368,17 +400,26 @@ public class MainActivity extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
 
-                                    Toast.makeText(MainActivity.this, getString(R.string.csoon), Toast.LENGTH_LONG)
-                                            .show();
 
+                                    SystemClock.sleep(3000);
+                                    String bitmapPath = null;
                                     try {
-                                        Runtime.getRuntime().exec(new String[] { "su", "-c",
-                                                "mv /data/data/com.fast0n.wifiview/cache/qr.png sdcard/WifiViewQR/"
-                                                        + item2 + ".png" })
-                                                .getInputStream();
-                                    } catch (IOException e) {
+                                        bitmapPath = MediaStore.Images.Media.insertImage(getContentResolver(),
+                                                "/sdcard/" + getString(R.string.folder_name) + "/" + item2
+                                                        + ".png",
+                                                getString(R.string.share_qr), null);
+
+                                    } catch (FileNotFoundException e) {
                                         e.printStackTrace();
                                     }
+                                    SystemClock.sleep(1000);
+                                    Uri bitmapUri = Uri.parse(bitmapPath);
+
+                                    Intent intent = new Intent(Intent.ACTION_SEND);
+                                    intent.setType("image/png");
+                                    intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_qr));
+                                    intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
+                                    startActivity(Intent.createChooser(intent, getString(R.string.share)));
 
                                 } else if (item == 3) {
                                     String q = (String) lista.getItemAtPosition(position);
@@ -400,9 +441,12 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        }catch(
+
+    IOException e)
+    {
+        e.printStackTrace();
+    }
 
     }
 

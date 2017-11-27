@@ -10,6 +10,7 @@
     <string name="csoon">Prossimamente...</string>
 
     <string name="share_msg">Ho copiato questa rete:\n\n%s\n\nGrazie a Wifi View</string>
+    <string name="share_qr">Ho creato questo QR della rete grazie a Wifi View</string>
     <string name="n_nf">Reti Wifi non trovate</string>
     <string name="p_nf">Nessuna password trovata</string>
 

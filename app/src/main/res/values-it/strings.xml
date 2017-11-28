@@ -1,4 +1,6 @@
 <resources>
+    <string name="archive">Archivio</string>
+
     <string name="cp_ssid">Copia SSID</string>
     <string name="cp_pwd">Copia Password</string>
     <string name="ct_qr">Crea Immagine QR</string>
@@ -7,12 +9,22 @@
     <string name="t_cp_ssid">SSID copiato</string>
     <string name="t_cp_pwd">Password copiata</string>
 
+    <string name="n_root">Root non trovato</string>
+    <string name="msg_n_root">Questo dispositivo è sprovvisto di permessi di root.\nEsegui il root per usare questa app.</string>
     <string name="csoon">Prossimamente...</string>
 
     <string name="share_msg">Ho copiato questa rete:\n\n%s\n\nGrazie a Wifi View</string>
     <string name="share_qr">Ho creato questo QR della rete grazie a Wifi View</string>
     <string name="n_nf">Reti Wifi non trovate</string>
     <string name="p_nf">Nessuna password trovata</string>
+
+    <string name="b_nf">Backup non trovato</string>
+    <string name="b_ct">Backup completato</string>
+
+    <string name="restore">Ripristina</string>
+    <string name="restore_all">Ripristina tutte le reti</string>
+    <string name="delete">Cancella</string>
+    <string name="deleted">Cancellato</string>
 
     <string name="about">Info</string>
     <string name="version">Versione %s</string>

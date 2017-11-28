@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.SystemClock;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -21,7 +21,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -30,7 +29,6 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,11 +36,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 public class MainActivity extends AppCompatActivity {
 
     AdView mAdView;
     SwipeRefreshLayout mSwipeRefreshLayout;
+    ListView mList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +50,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // addresses
-
         mAdView = (AdView) findViewById(R.id.adView);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
 
+        // ads
         MobileAds.initialize(this, "ca-app-pub-9646303341923759~9003031985");
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -65,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Refresh items
-
                 mSwipeRefreshLayout.setRefreshing(true);
                 refreshItems();
             }
@@ -75,27 +73,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void refreshItems() {
-        // Load items
-        // ...
-
-        // Load complete
         onItemsLoadComplete();
-
     }
 
     void onItemsLoadComplete() {
-        // Update the adapter and notify data set changed
-        // ...
-
         show_list();
-        // Stop refresh animation
         mSwipeRefreshLayout.setRefreshing(false);
-
     }
 
     public void show_list() {
 
-        final ListView lista = (ListView) findViewById(R.id.list);
+        mList = (ListView) findViewById(R.id.list);
         // show list
         try {
 
@@ -151,14 +139,14 @@ public class MainActivity extends AppCompatActivity {
                         "SSID: " + nameWifi.replace(",", "") + "\nPassword: " + passWifi.replace(",", "") };
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
                         android.R.layout.simple_list_item_1, networks);
-                lista.setAdapter(adapter);
+                mList.setAdapter(adapter);
 
                 // show menu
-                lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                mList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
-                        String item = (String) lista.getItemAtPosition(position);
+                        String item = (String) mList.getItemAtPosition(position);
                         String[] item1 = item.split("\n");
                         String item2 = item1[1].replace("Password: ", "");
 
@@ -170,113 +158,28 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+
                 // copy password
-                lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
+
+
                         final CharSequence[] items = { getString(R.string.cp_ssid), getString(R.string.cp_pwd),
-                                getString(R.string.ct_qr), getString(R.string.share) };
+                                getString(R.string.ct_qr), getString(R.string.share), getString(R.string.backup) };
+
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                         builder.setItems(items, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int item) {
-                                if (item == 0) {
 
-                                    String items = (String) lista.getItemAtPosition(position);
-                                    String[] item1 = items.split("\n");
-                                    String item2 = item1[0].replace("SSID: ", "");
-
-                                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                                    clipboard.setText(item2);
-                                    Toast.makeText(MainActivity.this, getString(R.string.t_cp_ssid), Toast.LENGTH_LONG)
-                                            .show();
-
-                                } else if (item == 1) {
-
-                                    String p = (String) lista.getItemAtPosition(position);
-                                    String[] item1 = p.split("\n");
-                                    String item2 = item1[1].replace("Password: ", "");
-
-                                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                                    clipboard.setText(item2);
-                                    Toast.makeText(MainActivity.this, getString(R.string.t_cp_pwd), Toast.LENGTH_LONG)
-                                            .show();
-
-                                } else if (item == 2) {
-
-                                    String items = (String) lista.getItemAtPosition(position);
-                                    String[] item1 = items.split("\n");
-                                    String item2 = item1[0].replace("SSID: ", "");
-
-                                    String p = (String) lista.getItemAtPosition(position);
-                                    String[] item3 = p.split("\n");
-                                    String item4 = item3[1].replace("Password: ", "");
-
-                                    MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-                                    try {
-                                        BitMatrix bitMatrix = multiFormatWriter.encode(
-                                                "WIFI:T:WPA;S:" + item2 + ";P:" + item4 + ";;", BarcodeFormat.QR_CODE,
-                                                200, 200);
-                                        BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                                        Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
-
-                                        File file = new File(MainActivity.this.getCacheDir(), "qr.png");
-                                        FileOutputStream fOut = new FileOutputStream(file);
-                                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-                                        fOut.flush();
-                                        fOut.close();
-
-                                        Runtime.getRuntime()
-                                                .exec(new String[] { "su", "-c",
-                                                        "mkdir /sdcard/" + getString(R.string.folder_name) })
-                                                .getInputStream();
-
-                                        SystemClock.sleep(1000);
-
-                                        Runtime.getRuntime()
-                                                .exec(new String[] { "su", "-c",
-                                                        "mv /data/data/com.fast0n.wifiview/cache/qr.png /sdcard/"
-                                                                + getString(R.string.folder_name) + "/" + item2 + ".png" })
-                                                .getInputStream();
-
-                                    } catch (WriterException e) {
-                                        e.printStackTrace();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-
-
-                                    SystemClock.sleep(3000);
-                                    String bitmapPath = null;
-                                    try {
-                                        bitmapPath = MediaStore.Images.Media.insertImage(getContentResolver(),
-                                                "/sdcard/" + getString(R.string.folder_name) + "/" + item2
-                                                        + ".png",
-                                                getString(R.string.share_qr), null);
-
-                                    } catch (FileNotFoundException e) {
-                                        e.printStackTrace();
-                                    }
-                                    SystemClock.sleep(1000);
-                                    Uri bitmapUri = Uri.parse(bitmapPath);
-
-                                    Intent intent = new Intent(Intent.ACTION_SEND);
-                                    intent.setType("image/png");
-                                    intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_qr));
-                                    intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
-                                    startActivity(Intent.createChooser(intent, getString(R.string.share)));
-
-                                } else if (item == 3) {
-                                    String q = (String) lista.getItemAtPosition(position);
-                                    String msg = String.format(getString(R.string.share_msg), q);
-                                    String shareBody = msg;
-                                    Intent sendIntent = new Intent();
-                                    sendIntent.setAction(Intent.ACTION_SEND);
-                                    sendIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                                    sendIntent.setType("text/plain");
-                                    startActivity(sendIntent);
+                                try {
+                                    show_menu(position, item);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
+
                             }
                         });
                         AlertDialog alert = builder.create();
@@ -302,19 +205,18 @@ public class MainActivity extends AppCompatActivity {
 
                 ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(MainActivity.this,
                         android.R.layout.simple_list_item_1, networks);
-                lista.setAdapter(adapter);
+                mList.setAdapter(adapter);
 
-                lista.setAdapter(adapter);
 
                 // show menu
-                lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                mList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
-                        String item = (String) lista.getItemAtPosition(position);
+                        String item = (String) mList.getItemAtPosition(position);
                         String[] item1 = item.split("\n");
 
-        String item2 = item1[1].replace("Password: ", "");
+                        String item2 = item1[1].replace("Password: ", "");
 
                         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                         clipboard.setText(item2);
@@ -324,113 +226,29 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+
                 // copy password
-                lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
+
+
                         final CharSequence[] items = { getString(R.string.cp_ssid), getString(R.string.cp_pwd),
-                                getString(R.string.ct_qr), getString(R.string.share) };
+                                getString(R.string.ct_qr), getString(R.string.share), getString(R.string.backup) };
+
+
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                         builder.setItems(items, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int item) {
-                                if (item == 0) {
 
-                                    String items = (String) lista.getItemAtPosition(position);
-                                    String[] item1 = items.split("\n");
-                                    String item2 = item1[0].replace("SSID: ", "");
-
-                                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                                    clipboard.setText(item2);
-                                    Toast.makeText(MainActivity.this, getString(R.string.t_cp_ssid), Toast.LENGTH_LONG)
-                                            .show();
-
-                                } else if (item == 1) {
-
-                                    String p = (String) lista.getItemAtPosition(position);
-                                    String[] item1 = p.split("\n");
-                                    String item2 = item1[1].replace("Password: ", "");
-
-                                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                                    clipboard.setText(item2);
-                                    Toast.makeText(MainActivity.this, getString(R.string.t_cp_pwd), Toast.LENGTH_LONG)
-                                            .show();
-
-                                } else if (item == 2) {
-
-                                    String items = (String) lista.getItemAtPosition(position);
-                                    String[] item1 = items.split("\n");
-                                    String item2 = item1[0].replace("SSID: ", "");
-
-                                    String p = (String) lista.getItemAtPosition(position);
-                                    String[] item3 = p.split("\n");
-                                    String item4 = item3[1].replace("Password: ", "");
-
-                                    MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-                                    try {
-                                        BitMatrix bitMatrix = multiFormatWriter.encode(
-                                                "WIFI:T:WPA;S:" + item2 + ";P:" + item4 + ";;", BarcodeFormat.QR_CODE,
-                                                200, 200);
-                                        BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                                        Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
-
-                                        File file = new File(MainActivity.this.getCacheDir(), "qr.png");
-                                        FileOutputStream fOut = new FileOutputStream(file);
-                                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-                                        fOut.flush();
-                                        fOut.close();
-
-                                        Runtime.getRuntime()
-                                                .exec(new String[] { "su", "-c",
-                                                        "mkdir /sdcard/" + getString(R.string.folder_name) })
-                                                .getInputStream();
-
-                                        SystemClock.sleep(1000);
-
-                                        Runtime.getRuntime()
-                                                .exec(new String[] { "su", "-c",
-                                                        "mv /data/data/com.fast0n.wifiview/cache/qr.png /sdcard/"
-                                                                + getString(R.string.folder_name) + "/" + item2 + ".png" })
-                                                .getInputStream();
-
-                                    } catch (WriterException e) {
-                                        e.printStackTrace();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-
-
-                                    SystemClock.sleep(3000);
-                                    String bitmapPath = null;
-                                    try {
-                                        bitmapPath = MediaStore.Images.Media.insertImage(getContentResolver(),
-                                                "/sdcard/" + getString(R.string.folder_name) + "/" + item2
-                                                        + ".png",
-                                                getString(R.string.share_qr), null);
-
-                                    } catch (FileNotFoundException e) {
-                                        e.printStackTrace();
-                                    }
-                                    SystemClock.sleep(1000);
-                                    Uri bitmapUri = Uri.parse(bitmapPath);
-
-                                    Intent intent = new Intent(Intent.ACTION_SEND);
-                                    intent.setType("image/png");
-                                    intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_qr));
-                                    intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
-                                    startActivity(Intent.createChooser(intent, getString(R.string.share)));
-
-                                } else if (item == 3) {
-                                    String q = (String) lista.getItemAtPosition(position);
-                                    String msg = String.format(getString(R.string.share_msg), q);
-                                    String shareBody = msg;
-                                    Intent sendIntent = new Intent();
-                                    sendIntent.setAction(Intent.ACTION_SEND);
-                                    sendIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                                    sendIntent.setType("text/plain");
-                                    startActivity(sendIntent);
+                                try {
+                                    show_menu(position, item);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
+
                             }
                         });
                         AlertDialog alert = builder.create();
@@ -441,13 +259,137 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-        }catch(
+        } catch (NullPointerException e) {
+            Intent myIntent = new Intent(MainActivity.this, RootActivity.class);
+            MainActivity.this.startActivity(myIntent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-    IOException e)
-    {
-        e.printStackTrace();
+
     }
 
+    public void show_menu(int position, int item) throws IOException {
+
+
+
+
+        final ListView lista = (ListView) findViewById(R.id.list);
+        if (item == 0) {
+
+            String items = (String) lista.getItemAtPosition(position);
+            String[] item1 = items.split("\n");
+            String item2 = item1[0].replace("SSID: ", "");
+
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            clipboard.setText(item2);
+            Toast.makeText(MainActivity.this, getString(R.string.t_cp_ssid), Toast.LENGTH_LONG).show();
+
+        } else if (item == 1) {
+
+            String p = (String) lista.getItemAtPosition(position);
+            String[] item1 = p.split("\n");
+            String item2 = item1[1].replace("Password: ", "");
+
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            clipboard.setText(item2);
+            Toast.makeText(MainActivity.this, getString(R.string.t_cp_pwd), Toast.LENGTH_LONG).show();
+
+        } else if (item == 2) {
+
+            String items = (String) lista.getItemAtPosition(position);
+            String[] item1 = items.split("\n");
+            String item2 = item1[0].replace("SSID: ", "");
+
+            String p = (String) lista.getItemAtPosition(position);
+            String[] item3 = p.split("\n");
+            String item4 = item3[1].replace("Password: ", "");
+
+            MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+            try {
+                BitMatrix bitMatrix = multiFormatWriter.encode("WIFI:T:WPA;S:" + item2 + ";P:" + item4 + ";;",
+                        BarcodeFormat.QR_CODE, 200, 200);
+                BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+
+                File file = new File(MainActivity.this.getCacheDir(), "qr.png");
+                FileOutputStream fOut = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+                fOut.flush();
+                fOut.close();
+
+            } catch (WriterException e) {
+                e.printStackTrace();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String bitmapPath = null;
+            try {
+                bitmapPath = MediaStore.Images.Media.insertImage(getContentResolver(),
+                        "/data/data/com.fast0n.wifiview/cache/qr.png", getString(R.string.share_qr), null);
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            Uri bitmapUri = Uri.parse(bitmapPath);
+
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("image/png");
+            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_qr));
+            intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
+            startActivity(Intent.createChooser(intent, getString(R.string.share)));
+
+        } else if (item == 3) {
+            String q = (String) lista.getItemAtPosition(position);
+            String msg = String.format(getString(R.string.share_msg), q);
+            String shareBody = msg;
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
+
+        } else if (item == 4) {
+            String q = (String) lista.getItemAtPosition(position);
+            String items = (String) lista.getItemAtPosition(position);
+            String[] item1 = items.split("\n");
+            String item2 = item1[0].replace("SSID: ", "");
+
+            String p = (String) lista.getItemAtPosition(position);
+            String[] item3 = p.split("\n");
+            String item4 = item3[1].replace("Password: ", "");
+
+
+            File folder = new File(Environment.getExternalStorageDirectory() +
+                    File.separator + getString(R.string.folder_name));
+
+            boolean success = true;
+            if (!folder.exists()) {
+                success = folder.mkdirs();
+            }
+            if (success) {
+
+                File myFile = new File(Environment.getExternalStorageDirectory() +
+                        File.separator + getString(R.string.folder_name) +File.separator + item2+".txt");
+                myFile.createNewFile();
+                FileOutputStream fOut = new FileOutputStream(myFile);
+                OutputStreamWriter myOutWriter =
+                        new OutputStreamWriter(fOut);
+                myOutWriter.append(item4);
+                myOutWriter.close();
+                fOut.close();
+
+            } else {
+                //
+            }
+
+            Toast.makeText(MainActivity.this, getString(R.string.b_ct), Toast.LENGTH_LONG).show();
+
+
+        }
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -465,6 +407,17 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
 
+
+        if (id == R.id.action_restore){
+            Intent myIntent = new Intent(MainActivity.this, RestoreActivity.class);
+            MainActivity.this.startActivity(myIntent);
+
+        }
+
+        if (id == R.id.action_restore_all){
+            Toast.makeText(MainActivity.this, getString(R.string.csoon), Toast.LENGTH_LONG).show();
+        }
+
         if (id == R.id.action_about) {
 
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -473,7 +426,7 @@ public class MainActivity extends AppCompatActivity {
 
             LayoutInflater inflater = this.getLayoutInflater();
 
-            View mView = inflater.inflate(R.layout.about, null);
+            View mView = inflater.inflate(R.layout.activity_about, null);
             dialogBuilder.setView(mView);
 
             TextView version = (TextView) mView.findViewById(R.id.textView);

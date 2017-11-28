@@ -1,6 +1,8 @@
 <resources>
-    <string translatable="false" name="app_name">WiFi View</string>
-    <string translatable="false" name="folder_name">WiFiViewQR</string>
+    <string name="app_name" translatable="false">WiFi View</string>
+    <string name="archive">Archive</string>
+    <string name="folder_name" translatable="false">WiFiViewQR</string>
+    <string name="backup" translatable="false">Backup</string>
 
     <string name="cp_ssid">Copy SSID</string>
     <string name="cp_pwd">Copy Password</string>
@@ -10,12 +12,21 @@
     <string name="t_cp_ssid">SSID copied</string>
     <string name="t_cp_pwd">Password copied</string>
 
+    <string name="n_root">Root not found</string>
+    <string name="msg_n_root">This device does not have root permissions.\nRun the root to use this app.</string>
     <string name="csoon">Coming soon…</string>
 
     <string name="share_msg">I copied this network:\n\n%s\n\nThanks to Wifi View</string>
     <string name="share_qr">I created this QR network thanks to Wifi View</string>
     <string name="n_nf">No Wifi networks found</string>
     <string name="p_nf">No password found</string>
+
+    <string name="b_nf">Backup not found</string>
+    <string name="b_ct">Backup complete</string>
+    <string name="restore">Restore</string>
+    <string name="restore_all">Restores all networks</string>
+    <string name="delete">Delete</string>
+    <string name="deleted">Deleted</string>
 
     <string name="about">About</string>
     <string name="version">Version %s</string>

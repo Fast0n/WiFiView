@@ -17,3 +17,9 @@ Licensed under the GPLv3: http://www.gnu.org/licenses/gpl-3.0.html
 
 [version-image]: https://img.shields.io/github/release/fast0n/WifiView.svg?style=flat-square
 [version-url]: https://github.com/fast0n/WifiView/releases/latest
+
+# Dona per il progetto
+Per la creazione di questo progetto è stato investito del tempo, se ritieni che sia utile dona allo sviluppatore.
+
+
+[![Donate](https://img.shields.io/badge/Dona-PayPal-009cde.svg?style=flat-square)](https://www.paypal.me/fast0n/)

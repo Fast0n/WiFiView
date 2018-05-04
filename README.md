@@ -1,4 +1,4 @@
-![](https://s26.postimg.org/7zsfnkozd/icon.png)
+<a><img src='https://s26.postimg.cc/jowfbjfxx/icon.png' border='0' alt='icon'/></a>
 
 # WiFi View
 App android per la visualizzazione delle reti WiFi salvate
@@ -9,7 +9,8 @@ App android per la visualizzazione delle reti WiFi salvate
 Licensed under the GPLv3: http://www.gnu.org/licenses/gpl-3.0.html
 
 ## Screenshots
-![](https://s26.postimg.org/c53c9hmrd/File1.png)![](https://s26.postimg.org/l1e4dfddl/File2.png)![](https://s26.postimg.org/jnmhi4e49/File3.png)![](https://s26.postimg.org/9xz3lkhh5/File4.png)![](https://s26.postimg.org/mqn7lht2x/File5.png)
+<a><img src='https://s26.postimg.cc/n202kik55/File1.png' border='0' alt='icon'/></a><a><img src='https://s26.postimg.cc/dy1nk2ik9/File2.png' border='0' alt='icon'/></a><a><img src='https://s26.postimg.cc/vljgi9shl/File3.png' border='0' alt='icon'/></a><a><img src='https://s26.postimg.cc/3zgoxl94p/File4.png' border='0' alt='icon'/></a><a><img src='https://s26.postimg.cc/qdyddtbw9/File5.png' border='0' alt='icon'/></a>
+
 
 <!-- Markdown link & img dfn's -->
 [travis-image]: https://travis-ci.org/Fast0n/WifiView.svg?branch=master

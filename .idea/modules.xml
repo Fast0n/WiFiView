@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Desktop-WiFiView.iml" filepath="$PROJECT_DIR$/Desktop-WiFiView.iml" group="WiFiView" />
       <module fileurl="file://$PROJECT_DIR$/WiFiView.iml" filepath="$PROJECT_DIR$/WiFiView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/WiFiView-app.iml" filepath="$PROJECT_DIR$/app/WiFiView-app.iml" group="WiFiView/app" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

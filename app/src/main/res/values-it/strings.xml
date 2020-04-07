@@ -11,7 +11,7 @@
 
     <string name="n_root">Root non trovato</string>
     <string name="msg_n_root">Questo dispositivo è sprovvisto di permessi di root.\nEsegui il root per usare questa app.</string>
-    <string name="csoon">Prossimamente...</string>
+    <string name="csoon">Prossimamente…</string>
 
     <string name="share_msg">Ho copiato questa rete:\n\n%s\n\nGrazie a Wifi View</string>
     <string name="share_qr">Ho creato questo QR della rete grazie a Wifi View</string>

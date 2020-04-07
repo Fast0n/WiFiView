@@ -3,14 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.fast0n.wifiview.MainActivity">
 
-
-    <item
-        android:id="@+id/action_restore_all"
-        android:icon="@android:drawable/ic_menu_rotate"
-        android:orderInCategory="98"
-        android:title="@string/restore_all"
-        app:showAsAction="always" />
-
     <item
         android:id="@+id/action_restore"
         android:icon="?android:attr/actionModeFindDrawable"

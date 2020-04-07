@@ -1,15 +1,17 @@
-<a><img src='https://s26.postimg.cc/jowfbjfxx/icon.png' border='0' alt='icon'/></a>
+<a><img src='imgStore/icon.png' border='0' alt='icon'/></a>
 
 # WiFi View
 App android per la visualizzazione delle reti WiFi salvate
 
-[![Build Status][travis-image]][travis-url] [![GitHub release][version-image]][version-url]
+[![Build Status][travis-image]][travis-url] 
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/fast0n/WiFiView?style=social)
+![GitHub Releases](https://img.shields.io/github/downloads/fast0n/WiFiView/total?style=social)
 
 ## License
 Licensed under the GPLv3: http://www.gnu.org/licenses/gpl-3.0.html
 
 ## Screenshots
-<a><img src='https://s26.postimg.cc/n202kik55/File1.png' border='0' alt='icon'/></a><a><img src='https://s26.postimg.cc/dy1nk2ik9/File2.png' border='0' alt='icon'/></a><a><img src='https://s26.postimg.cc/vljgi9shl/File3.png' border='0' alt='icon'/></a><a><img src='https://s26.postimg.cc/3zgoxl94p/File4.png' border='0' alt='icon'/></a><a><img src='https://s26.postimg.cc/qdyddtbw9/File5.png' border='0' alt='icon'/></a>
+<a><img src='imgStore/File1.png' border='0' alt='icon'/></a><a><img src='imgStore/File2.png' border='0' alt='icon'/></a><a><img src='imgStore/File3.png' border='0' alt='icon'/></a><a><img src='imgStore/File4.png' border='0' alt='icon'/></a><a><img src='imgStore/File5.png' border='0' alt='icon'/></a>
 
 
 <!-- Markdown link & img dfn's -->
